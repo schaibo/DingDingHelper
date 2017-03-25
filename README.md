@@ -5,8 +5,9 @@
 
 ![](./WechatIMG1.png)
 
+## 使用
 
-#### 使用
+#### 基础使用
 	需要root,把apk安装到system/app 目录下, 然后打开app, 保存下钉钉密码, 然后选择打卡时间,
 	完成, 就是这么简单. AccessibilityService可以不打开, 打卡时间一到会自动打卡.
 #### 高级用法
@@ -29,6 +30,9 @@
 	$ settings put secure enabled_accessibility_services  com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.services.DingDingHelperAccessibilityService
 	$ settings put secure accessibility_enabled 0
 	
+
+
+## 源码解析
 
 ##### 钉钉打卡方式
 1. 极速打卡,在办公地方自动打卡.
@@ -129,11 +133,11 @@
 	
 	![](./adj.png)
 	
-	adj值为-12,相当低了, 前台可见进程值0, 天王老子来也杀你不死
+	adj值为-12 , 相当低了, 前台可见进程值0 , 天王老子来也杀你进程不死 .
 
 ### 结束语
-    安装上钉钉打卡神器, 你基本可以开心玩耍 , 每天吃完早餐再去上班 , 不用急急忙忙冲上去打完卡在下来买早餐 ...
-    最后我想说: 技术无错,看你怎么应用,还我快播啊.(客官们不要迟到啊!)
+    安装上钉钉打卡神器 , 你基本可以开心玩耍 , 每天吃完早餐再去上班 , 不用急急忙忙冲上去打完卡在下来买早餐 ...
+    最后我想说: 技术无错 , 看你怎么应用 , 还我快播啊 . (客官们不要迟到啊!)
     
 ### 欢迎Fork,PR,Star!!  [钉钉自动打卡](https://github.com/Justson/DingDingHelper.git)   
  
