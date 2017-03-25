@@ -9,7 +9,26 @@
 #### 使用
 	需要root,把apk安装到system/app 目录下, 然后打开app, 保存下钉钉密码, 然后选择打卡时间,
 	完成, 就是这么简单. AccessibilityService可以不打开, 打卡时间一到会自动打卡.
+#### 高级用法
+	
+   远程一句命令打卡.电脑可以装个TeamViewer,在家随时,随地打卡(爽YY).
+   
+  `$ am broadcast -a com.ucmap.dingdinghelper.clock `
+   
+   
+   远程开启服务命令
+   
+ 
+    $ settings put secure enabled_accessibility_services  com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.services.DingDingHelperAccessibilityService
+    $ settings put secure accessibility_enabled 1
+   
+   
+	
+   远程关闭服务命令
 
+	$ settings put secure enabled_accessibility_services  com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.services.DingDingHelperAccessibilityService
+	$ settings put secure accessibility_enabled 0
+	
 
 ##### 钉钉打卡方式
 1. 极速打卡,在办公地方自动打卡.
@@ -33,9 +52,7 @@
 	AlarmManager注册定时器广播, 打卡时间一到, 系统回调我们写好的静态广播,然后把DingDingHelperAccessibilityService,钉钉启动.
 	
 	```
-	
 	am.setWindow //把打卡时间转成Calendar,传进入
-	
 	```
 	
 	```
@@ -97,7 +114,7 @@
 	
 	进程一旦被杀死 , 你写的广播也就不会回调 . 保持不死进程是很重要的一步 .
 	
-	(非root)网上各种保活套路层出不穷,相信除了手机QQ和微信(白名单), 还没有一个应用能很有效果的保活下来.系统要杀你,那轮到你不死.(孩子们太天真了).
+	(非root)网上各种保活套路层出不穷,相信除了手机QQ和微信(白名单), 还没有一个应用能很有效果的保活下来.系统要杀你,那轮到你不死.(孩子们别天真了).
 	
 	(root)有了这个权限就简单多了,跻身一变, 变成系统级别app.
 	
@@ -105,7 +122,7 @@
 	
 	
 	```
-	mount -o rw,remount yassf2 /system/    //重新挂载	chmod 777 /system/app/	cp /data/app/com.ucmap.apt-2.apk   /system/app/com.ucmap.apt-2.apk  //复制app	到system/app/ 这个目录	pm install -r \"/system/app/com.ucmap.apt-2.apk\" //安装	 am start -n \"com.ucmap.apt/om.ucmap.apt.MainActivity\" -a 	android.intent.action.MAIN -c android.intent.category.LAUNCHER"//启动app	rm /data/app/com.ucmap.apt-2.apk  //删除原有的apk文件	mount -o remount,ro -t yaffs2 /dev/block/mtdblock3 /system    //恢复分区
+	mount -o rw,remount yassf2 /system/    //重新挂载	chmod 777 /system/app/	cp /data/app/com.ucmap.dingdinghelper.apk   /system/app/com.ucmap.dingdinghelper.apk  //复制app	到system/app/ 这个目录	pm install -r \"/system/app/com.ucmap.dingdinghelper.apk\" //安装	 am start -n \"com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.MainActivity\" -a 	android.intent.action.MAIN -c android.intent.category.LAUNCHER"//启动app	rm /data/app/com.ucmap.dingdinghelper.apk  //删除原有的apk文件	mount -o remount,ro -t yaffs2 /dev/block/mtdblock3 /system    //恢复分区
 	```
 	
 	看下adj值
@@ -115,7 +132,7 @@
 	adj值为-12,相当低了, 前台可见进程值0, 天王老子来也杀你不死
 
 ### 结束语
-    安装上helper, 你基本可以开心玩耍 , 每天吃完早餐再去上班 , 不用急急忙忙冲上去打完卡在下来买早餐 ...
+    安装上钉钉打卡神器, 你基本可以开心玩耍 , 每天吃完早餐再去上班 , 不用急急忙忙冲上去打完卡在下来买早餐 ...
     最后我想说: 技术无错,看你怎么应用,还我快播啊.(客官们不要迟到啊!)
     
 ### 欢迎Fork,PR,Star!!  [钉钉自动打卡](https://github.com/Justson/DingDingHelper.git)   
