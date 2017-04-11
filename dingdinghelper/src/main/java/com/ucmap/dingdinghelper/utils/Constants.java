@@ -1,5 +1,7 @@
 package com.ucmap.dingdinghelper.utils;
 
+import android.os.Build;
+
 /**
  * <b>@项目名：</b> Helmet<br>
  * <b>@包名：</b>com.ucmap.helmet<br>
@@ -32,4 +34,7 @@ public interface Constants {
     String DISENABLE_SERVICE_PUT = "settings put secure accessibility_enabled 0";
 
 
+    String IS_NOTITY_TYPE_CHECK_IN = "is_notity_type_check_in";
+
+    boolean IS_NOTITY_TYPE_CHECK_IN_TAG = Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH ? true : false;
 }

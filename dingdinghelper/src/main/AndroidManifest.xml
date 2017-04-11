@@ -50,13 +50,11 @@
             android:name=".services.TimingService"
             android:process=":remote_timing"
             >
-
         </service>
         <service
             android:name=".services.TimingService$InnerService"
             android:process=":remote_timing"
             >
-
         </service>
 
         <service

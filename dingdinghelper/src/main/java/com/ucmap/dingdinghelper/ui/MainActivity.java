@@ -1,17 +1,24 @@
 package com.ucmap.dingdinghelper.ui;
 
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ApplicationInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +31,8 @@ import com.ucmap.dingdinghelper.ITimerListener;
 import com.ucmap.dingdinghelper.ITimingAidlInterface;
 import com.ucmap.dingdinghelper.R;
 import com.ucmap.dingdinghelper.app.App;
+import com.ucmap.dingdinghelper.common.MakeGroupRunnable;
+import com.ucmap.dingdinghelper.common.OrderThread;
 import com.ucmap.dingdinghelper.entity.AccountEntity;
 import com.ucmap.dingdinghelper.pixelsdk.ActivityManager;
 import com.ucmap.dingdinghelper.pixelsdk.PixelActivityUnion;
@@ -67,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
                 mFrameLayout.setVisibility(View.GONE);
         }
     };
+    private Button mCheckInCurrent;
+    private Toolbar mToolbar;
+    private AlertDialog mAlertDialog;
+    private ProgressDialog mProgressDialog;
 
     private void updateUI(String time) {
         mHandler.removeCallbacks(m);
@@ -151,9 +164,8 @@ public class MainActivity extends AppCompatActivity {
                     if (mITimingAidlInterface != null)
                         mITimingAidlInterface.reInitCheckInTime(time);
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
-
             }
         });
     }
@@ -185,8 +197,8 @@ public class MainActivity extends AppCompatActivity {
         mNoonTimePickerDialog.show();
     }
 
-
     private void initAccount() {
+
         String jsonAccountList = (String) SPUtils.getString(Constants.ACCOUNT_LIST, "-1");
         List<AccountEntity> mAccountEntities = JsonUtils.listJson(jsonAccountList, AccountEntity.class);
 
@@ -196,12 +208,55 @@ public class MainActivity extends AppCompatActivity {
             mClearButton.setVisibility(View.GONE);
         } else {
             mClearButton.setVisibility(View.VISIBLE);
+            mCheckInCurrent.setVisibility(View.VISIBLE);
+
             if (!isRunning(TimingService.class.getName()))
                 startService(new Intent(this, TimingService.class));
             this.bindService(new Intent(this, TimingService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
             this.findViewById(R.id.check_time_linearLayout).setVisibility(View.VISIBLE);
         }
         setAlarmList(mAccountEntities);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isSystemApp();
+
+    }
+
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            List<ApplicationInfo> mInfos = getPackageManager().getInstalledApplications(0);
+            for (ApplicationInfo mInfo : mInfos) {
+                if (mInfo.sourceDir.contains(getPackageName())) {
+                    toShowBeSystemApp(mInfo);
+                    break;
+                }
+            }
+        }
+    };
+
+    private void toShowBeSystemApp(final ApplicationInfo applicationInfo) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    toShowBeSystemApp(applicationInfo);
+                }
+            });
+            return;
+        }
+        if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
+            mDoSystemApp.setVisibility(View.GONE);
+        else
+            mDoSystemApp.setVisibility(View.VISIBLE);
+    }
+
+    private void isSystemApp() {
+        mComminicationPool.execute(mRunnable);
     }
 
     private void clearAccount() {
@@ -229,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
         boolean tag = false;
         android.app.ActivityManager mActivityManager = (android.app.ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        List<android.app.ActivityManager.RunningServiceInfo> mRunningTaskInfos = mActivityManager.getRunningServices(50);
+        List<android.app.ActivityManager.RunningServiceInfo> mRunningTaskInfos = mActivityManager.getRunningServices(150);
         Log.i("Infoss", "  size:" + mRunningTaskInfos.size());
         for (int i = 0; i < mRunningTaskInfos.size(); i++) {
             Log.i("Infoss", "RunningInfo:" + mRunningTaskInfos.get(i).service.getClassName());
@@ -242,89 +297,157 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Button mClearButton;
+    private Button mDoSystemApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.mFrameLayout = (FrameLayout) this.findViewById(R.id.parentGroup_frameLayout);
-        mPTimeTextView = (TextView) this.findViewById(R.id.p_time_textView_);
-
-        /*if (!isRunning(TimingService.class.getName())) {
-            Log.i("Infoss", "已经启动service");
-            startService(new Intent(this, TimingService.class));
-        }*/
-        String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        mClearButton = (Button) this.findViewById(R.id.clear_account);
-
-        Log.i("Infoss", "  android _id:" + id);
-
-        initAccount();
-
-        mNTimeTextView = (TextView) this.findViewById(R.id.n_time_textView);
-        this.findViewById(R.id.n_time_textView)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showPickerAfterNoon();
-
-                    }
-                });
-
-        mTimeTextView = (TextView) this.findViewById(R.id.time_textView);
-        this.findViewById(R.id.select_check_in_time)//
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showPickerMorning();
-                    }
-                });
-
-        this.findViewById(R.id.clear_account)//
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mClearButton.setVisibility(View.GONE);
-                        clearAccount();
-                        Toast.makeText(App.mContext, "已经清空账户", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
         PixelActivityUnion
                 .with(App.mContext)
                 .targetActivityClazz(PointActivity.class)//
                 .args(null)//
                 .setActiviyManager(ActivityManager.getInstance())
                 .start();
-
-
+        mToolbar = (Toolbar) this.findViewById(R.id.toolbar);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        this.setSupportActionBar(mToolbar);
+        this.mFrameLayout = (FrameLayout) this.findViewById(R.id.parentGroup_frameLayout);
+        mPTimeTextView = (TextView) this.findViewById(R.id.p_time_textView_);
+        String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        mClearButton = (Button) this.findViewById(R.id.clear_account);
+        mCheckInCurrent = (Button) this.findViewById(R.id.open_service);
+        Log.i("Infoss", "  android _id:" + id);
+        initAccount();
+        mNTimeTextView = (TextView) this.findViewById(R.id.n_time_textView);
+        this.findViewById(R.id.n_time_textView)
+                .setOnClickListener(mMainListener);
+        mTimeTextView = (TextView) this.findViewById(R.id.time_textView);
+        this.findViewById(R.id.select_check_in_time)//
+                .setOnClickListener(mMainListener);
+        this.findViewById(R.id.clear_account)//
+                .setOnClickListener(mMainListener);
         this.findViewById(R.id.save_password)//
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivityForResult(mIntent, 0x88);
-                    }
-                });
+                .setOnClickListener(mMainListener);
         this.findViewById(R.id.open_service)//
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
-
-        //当前应用的代码执行目录
-        if (ShellUtils.upgradeRootPermission(getPackageCodePath())) {
+                .setOnClickListener(mMainListener);
+        mDoSystemApp = (Button) findViewById(R.id.do_system_app);
+        mDoSystemApp.setOnClickListener(mMainListener);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //当前应用的代码执行目录
+                if (ShellUtils.upgradeRootPermission(getPackageCodePath())) {
 //            Toast.makeText(App.mContext, "已经拿到root权限", Toast.LENGTH_SHORT).show();
-
 //            Log.i("Infoss","shell result:"+ShellUtils.execCmd("input keyevent 26", true).toString());
-        } else {
-            Toast.makeText(App.mContext, "root权限失败.", Toast.LENGTH_SHORT).show();
-        }
+                } else {
+                    if (mClearButton != null) {
+                        mClearButton.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(App.mContext, "root权限失败.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                }
+            }
+        }).start();
 
     }
+
+    private View.OnClickListener mMainListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()) {
+
+                case R.id.save_password:
+                    Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivityForResult(mIntent, 0x88);
+                    break;
+                case R.id.open_service:
+                    List<String> orders = new ArrayList<String>();
+                    orders.add("am broadcast -a com.ucmap.dingdinghelper.clock");
+                    new OrderThread(orders).start();
+                    break;
+                case R.id.clear_account:
+                    mClearButton.setVisibility(View.GONE);
+                    mCheckInCurrent.setVisibility(View.GONE);
+                    clearAccount();
+                    Toast.makeText(App.mContext, "已经清空账户", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.select_check_in_time:
+                    showPickerMorning();
+                    break;
+                case R.id.n_time_textView:
+                    showPickerAfterNoon();
+                    break;
+                case R.id.do_system_app:
+                    doSystemAppDialog();
+                    break;
+            }
+        }
+    };
+
+    private void doSystemAppDialog() {
+
+        //
+        if (mAlertDialog == null)
+            mAlertDialog = new AlertDialog.Builder(this)//
+                    .setMessage("确定要成为系统App吗？")//
+                    .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mAlertDialog.dismiss();
+                        }
+                    }).setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mAlertDialog.dismiss();
+                            doSystemApp();
+                        }
+                    }).create();
+
+        mAlertDialog.show();
+    }
+
+    private boolean isMaking = false;
+
+    private void doSystemApp() {
+        if (!isMaking) {
+            isMaking = true;
+            showProgressDialog();
+            mComminicationPool.execute(new MakeGroupRunnable(this, mCallback));
+        }
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = (ProgressDialog) new ProgressDialog(this);
+            mProgressDialog.setMessage("成为系统App中...");
+            mProgressDialog.setCancelable(false);
+        }
+        mProgressDialog.show();
+    }
+
+    private MakeGroupRunnable.Callback mCallback = new MakeGroupRunnable.Callback() {
+        @Override
+        public void call(final boolean isSuccess) {
+            isMaking = false;
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mProgressDialog != null)
+                        mProgressDialog.dismiss();
+
+                    String msg = isSuccess == true ? "成功,请重启手机生效" : "失败";
+                    Log.i("Infoss", "isSuccess:" + isSuccess);
+                    Toast.makeText(App.mContext, msg+"", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -339,6 +462,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (mList == null || mList.isEmpty()) {
             return;
+        }
+        /*如果系统api>19转化为通知形式也唤醒广播*/
+        if (Constants.IS_NOTITY_TYPE_CHECK_IN_TAG) {
+            Log.i("Infoss", "通知唤醒广播 打卡");
+            return;
+        } else {
+            Log.i("Infoss", "Alarm Manager 唤醒");
         }
         for (AccountEntity mAccountEntity : mList) {
             DingHelperUtils.setAlarm(mAccountEntity, App.mContext);
@@ -360,6 +490,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

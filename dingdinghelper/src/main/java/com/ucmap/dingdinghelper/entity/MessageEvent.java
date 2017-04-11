@@ -12,4 +12,17 @@ package com.ucmap.dingdinghelper.entity;
 
 public class MessageEvent {
 
+    private int flag_bit;
+
+    public MessageEvent(int flag_bit) {
+        this.flag_bit = flag_bit;
+    }
+
+    public int getFlag_bit() {
+        return flag_bit;
+    }
+
+    public void setFlag_bit(int flag_bit) {
+        this.flag_bit = flag_bit;
+    }
 }

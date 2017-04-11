@@ -2,7 +2,6 @@ package com.ucmap.dingdinghelper.sphelper;
 
 
 /**
- * Created by l4656_000 on 2015/11/30.
  */
 public class ConstantUtil {
     // normal constants

@@ -1,6 +1,7 @@
 package com.ucmap.dingdinghelper.ui;
 
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -58,10 +59,14 @@ public class LoginActivity extends AppCompatActivity {
             mAccountEntity.setPassword(mPasswordView.getText().toString());
             mList.add(mAccountEntity);
             SPUtils.save(Constants.ACCOUNT_LIST, JsonUtils.toJson(mList));
-            DingHelperUtils.setAlarm(mAccountEntity, App.mContext);
 
             mEmailView.setText("");
             mPasswordView.setText("");
+             /*如果系统api>19转化为通知形式也唤醒广播*/
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+                return;
+            }
+            DingHelperUtils.setAlarm(mAccountEntity, App.mContext);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-
 
 
     /**
@@ -193,7 +197,6 @@ public class LoginActivity extends AppCompatActivity {
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
-
 
 
 }

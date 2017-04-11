@@ -2,6 +2,7 @@ package com.ucmap.dingdinghelper.utils;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.ucmap.dingdinghelper.entity.AccountEntity;
@@ -46,13 +47,15 @@ public class DingHelperUtils {
         return mRandom.nextBoolean();
     }
 
-    /**
-     * 系统是否在锁屏状态
-     *
-     * @return
-     */
     public static boolean isScreenLocked(Context context) {
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        Log.i("Infoss", "isScreenLocked:" + keyguardManager.inKeyguardRestrictedInputMode());
         return keyguardManager.inKeyguardRestrictedInputMode();
+    }
+
+    public static boolean isScreenLight(Context context) {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        Log.i("Infoss", "isScreenLight:" + pm.isScreenOn());
+        return pm.isScreenOn();
     }
 }

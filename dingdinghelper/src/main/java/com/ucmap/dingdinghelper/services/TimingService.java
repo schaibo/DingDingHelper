@@ -28,6 +28,7 @@ import com.ucmap.dingdinghelper.ui.MainActivity;
 import com.ucmap.dingdinghelper.utils.Constants;
 import com.ucmap.dingdinghelper.utils.DateUtils;
 import com.ucmap.dingdinghelper.utils.JsonUtils;
+import com.ucmap.dingdinghelper.utils.ShellUtils;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ import static com.ucmap.dingdinghelper.utils.DateUtils.getHourAndMin;
  * <b>@创建时间：</b> &{DATE}<br>
  * <b>@公司：</b> 宝诺科技<br>
  * <b>@邮箱：</b> cenxiaozhong.qqcom@qq.com<br>
- * <b>@描述</b><br>
+ * <b>@描述</b>该服务主要用于计时，处于远程进程，<br>
  */
 
 public class TimingService extends Service {
@@ -88,7 +89,7 @@ public class TimingService extends Service {
             mNotifyThread = new NotifyThread();
             runing_monitor = true;
             mNotifyThread.setPriority(Thread.MAX_PRIORITY);
-        /*启动监控线程*/
+            /*启动通知线程*/
             mNotifyThread.start();
         }
     }
@@ -198,7 +199,6 @@ public class TimingService extends Service {
         }
     }
 
-    /*提升优先级,然而对AccessibilityService 并没有什么卵用*/
     public static class InnerService extends Service {
         private static final void startInnerService(Context context) {
             context.startService(new Intent(context, InnerService.class));
@@ -235,7 +235,6 @@ public class TimingService extends Service {
             super.onDestroy();
             stopForeground(true);
         }
-
     }
 
     private static final int NOTIFICATION_ID_PROGRESS_ID = 0x100100;
@@ -259,13 +258,23 @@ public class TimingService extends Service {
         this.min = hm[1];
     }
 
+    private void toCheckIn() {
+        if (Constants.IS_NOTITY_TYPE_CHECK_IN_TAG) {
+            ShellUtils.execCmd("am broadcast -a com.ucmap.dingdinghelper.clock", true);
+            Log.i("Infoss", "执行 命令打卡:am broadcast -a com.ucmap.dingdinghelper.clock ");
+        } else {
+            Log.i("Infoss", "打卡失败  等待 AlarmManager 唤醒");
+        }
+    }
+
     private void sendNotification(int hour, int min) {
 
 
         Log.i("Infoss", "当前状态:" + STATE + "  hour:" + hour + "  min:" + min);
         if ((STATE == 0) && (this.hour < hour || (this.hour == hour && this.min <= min))) {
-
-
+            Log.i("Infoss", "时间:" + this.hour + "  :  " + this.min);
+            if ((this.hour == hour && this.min <= min))
+                toCheckIn();
             String time = "";
             time = (String) SPUtils.getString(Constants.AFTERNOON_CHECK_IN_TIME, "20:45");
             STATE = 1;
@@ -273,15 +282,20 @@ public class TimingService extends Service {
             String[] hm = time.split(":");
             this.hour = Integer.parseInt(hm[0]);
             this.min = Integer.parseInt(hm[1]);
-            /*重进该方法*/
+
+
+
+             /*重进该方法*/
             sendNotification(hour, min);
-            Log.i("Infoss", "时间:" + this.hour + "  :  " + this.min);
             return;
         } else if (STATE == 1 && (this.hour < hour || (this.hour == hour && this.min <= min))) {
+            Log.i("Infoss", "else if 时间:" + this.hour + "  :  " + this.min);
+            if ((this.hour == hour && this.min <= min))
+                toCheckIn();
             setTargetTimeForLockIn();
             STATE = 2;
             sendNotification(hour, min);
-            Log.i("Infoss", "else if 时间:" + this.hour + "  :  " + this.min);
+
             return;
         } else if (STATE == 2) {
             if (hour < 23 && hour >= 12) {
@@ -343,12 +357,12 @@ public class TimingService extends Service {
         mITimerListenerRemoteCallbackList.finishBroadcast();
     }
 
-    /*监控线程 */
+    /*通知线程 */
     class NotifyThread extends Thread {
         @Override
         public void run() {
 
-            /*把优先级级别提到最高,保证监控线程最优先运行*/
+            /*把优先级级别提到最高,保证通知线程最优先运行*/
             Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
             Log.i("Infoss", "start NotifyThread:" + runing_monitor);
             while (runing_monitor) {
@@ -366,7 +380,7 @@ public class TimingService extends Service {
                 int min = Integer.parseInt(hourAndMin[1]);
                 sendNotification(hourInt, min);
                 try {
-                    /*休眠----每10sNotify一次*/
+                    /*休眠----每15s监测一次*/
                     sleep(1000 * 10);
                 } catch (InterruptedException e) {
 //                    e.printStackTrace();
