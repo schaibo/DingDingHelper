@@ -12,8 +12,8 @@
 bin/
 gen/
 out/
-androidTest/
-test/
+src/androidTest/
+src/test/
 
 # Gradle files
 .gradle/
