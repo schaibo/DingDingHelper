@@ -144,7 +144,7 @@
     最后我想说: 技术无错 , 看你怎么应用 , 还我快播啊 . (ps:客官们不要迟到啊!)
     
 ### 欢迎Fork,PR,Star!!  [钉钉自动打卡](https://github.com/Justson/DingDingHelper.git)   
-Creating a new branch is quick & simple.
+
  
 	
 
