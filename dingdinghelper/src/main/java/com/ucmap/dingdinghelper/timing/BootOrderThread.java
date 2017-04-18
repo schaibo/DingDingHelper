@@ -10,8 +10,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 /**
- * <b>@项目名：</b> Helmet<br>
- * <b>@包名：</b>com.ucmap.helmet<br>
+ * <b>@项目名：</b> dingdinghelper<br>
+ * <b>@包名：</b>com.ucmap.dingdinghelper<br>
  * <b>@创建者：</b> cxz --  just<br>
  * <b>@创建时间：</b> &{DATE}<br>
  * <b>@公司：</b> 宝诺科技<br>

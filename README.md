@@ -1,9 +1,9 @@
 ## <center/>钉钉自动打卡
 >### 前言
->我是深圳一名白天上班,晚上修行学习的苦行憎.移动端不在像以前那么红,市场的招聘更是冷冷清清,公司也因此福利大减, 比如双休改为大小周,拼命的加班 反而请假无法调休,忘记打卡申报无效,等等更多不可理解的行为,于是钉钉自动打卡诞生了(现在每天都帮我自动打卡).
+>钉钉自动打卡是一款帮助用户完全解放双手的程序。到时间点会自动唤醒程序进行打卡,而且支持远程打卡.
 
 
-![](./WechatIMG1.png)
+![](./helper2.png)
 
 
 ### 大体思路
@@ -129,7 +129,7 @@
 	
 	
 	```
-	mount -o rw,remount yassf2 /system/    //重新挂载	chmod 777 /system/app/	cp /data/app/com.ucmap.dingdinghelper.apk   /system/app/com.ucmap.dingdinghelper.apk  //复制app	到system/app/ 这个目录	pm install -r \"/system/app/com.ucmap.dingdinghelper.apk\" //安装
+	mount -o rw,remount yassf2 /system/    //重新挂载	cp /data/app/com.ucmap.dingdinghelper.apk   /system/app/com.ucmap.dingdinghelper.apk  //复制app	到system/app/ 这个目录	chmod 777 /system/app/com.ucmap.dingdinghelper.apk        //修改文件权限	pm install -r \"/system/app/com.ucmap.dingdinghelper.apk\" //安装
 		 am start -n \"com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.MainActivity\" -a 	android.intent.action.MAIN -c android.intent.category.LAUNCHER"//启动app	rm /data/app/com.ucmap.dingdinghelper.apk  //删除原有的apk文件	mount -o remount,ro -t yaffs2 /dev/block/mtdblock3 /system    //恢复分区
 	```
 	
@@ -137,7 +137,7 @@
 	
 	![](./adj.png)
 	
-	adj值为-12 , 相当低了, 前台可见进程值0 , 天王老子来也杀你进程不死 .
+	adj值为-12 , 相当低了, 前台可见进程值0 , 进程神了 .
 
 ### 结束语
     安装上钉钉自动打卡 , 你基本可以开心玩耍 , 每天吃完早餐再去上班 , 不用急急忙忙冲上去打完卡在下来买早餐 ...

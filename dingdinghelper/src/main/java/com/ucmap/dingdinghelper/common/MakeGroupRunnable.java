@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <b>@项目名：</b> Helmet<br>
- * <b>@包名：</b>com.ucmap.helmet<br>
+ * <b>@项目名：</b> dingdinghelper<br>
+ * <b>@包名：</b>com.ucmap.dingdinghelper<br>
  * <b>@创建者：</b> cxz --  just<br>
  * <b>@创建时间：</b> &{DATE}<br>
  * <b>@公司：</b> 宝诺科技<br>
@@ -69,6 +69,9 @@ public class MakeGroupRunnable implements Runnable {
 //        mList.add("busybox rm -f " + appPath);
         ShellUtils.CommandResult t = ShellUtils.execCmd(mList, true);
         Log.i("Infoss", "do result:" + t.toString());
+        if (t.result == -1) {
+            return false;
+        }
         return true;
     }
 
@@ -88,6 +91,9 @@ public class MakeGroupRunnable implements Runnable {
 //        mList.add("busybox rm -rf /data/app/" + parentName);
         ShellUtils.CommandResult t = ShellUtils.execCmd(mList, true);
         Log.i("Infoss", "do result:" + t.toString());
+        if (t.result == -1) {
+            return false;
+        }
         return true;
     }
 

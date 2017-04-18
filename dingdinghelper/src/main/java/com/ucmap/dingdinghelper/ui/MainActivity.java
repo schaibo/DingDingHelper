@@ -299,6 +299,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mClearButton;
     private Button mDoSystemApp;
 
+    private boolean isRoot = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -338,14 +340,14 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 //当前应用的代码执行目录
                 if (ShellUtils.upgradeRootPermission(getPackageCodePath())) {
-//            Toast.makeText(App.mContext, "已经拿到root权限", Toast.LENGTH_SHORT).show();
-//            Log.i("Infoss","shell result:"+ShellUtils.execCmd("input keyevent 26", true).toString());
+                    isRoot = true;
                 } else {
                     if (mClearButton != null) {
                         mClearButton.post(new Runnable() {
                             @Override
                             public void run() {
                                 Toast.makeText(App.mContext, "root权限失败.", Toast.LENGTH_SHORT).show();
+                                isRoot = false;
                             }
                         });
                     }
@@ -360,6 +362,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
+            if (!isRoot) {
+                Toast.makeText(App.mContext, "没有root无法进行下一步", Toast.LENGTH_SHORT).show();
+                return;
+            }
             switch (v.getId()) {
 
                 case R.id.save_password:
@@ -441,9 +447,9 @@ public class MainActivity extends AppCompatActivity {
                     if (mProgressDialog != null)
                         mProgressDialog.dismiss();
 
-                    String msg = isSuccess == true ? "成功,请重启手机生效" : "失败";
+                    String msg = isSuccess == true ? "成功,请重启手机生效" : "失败,请检查是否root";
                     Log.i("Infoss", "isSuccess:" + isSuccess);
-                    Toast.makeText(App.mContext, msg+"", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(App.mContext, msg + "", Toast.LENGTH_SHORT).show();
                 }
             });
         }

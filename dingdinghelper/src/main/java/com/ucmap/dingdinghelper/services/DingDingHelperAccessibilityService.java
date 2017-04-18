@@ -61,7 +61,7 @@ import static com.ucmap.dingdinghelper.utils.DateUtils.getHourAndMin;
  * 3.可用于保存多个钉钉账户， 设定时间， 程序10s就监测一次
  * 达到条件会执行自动打卡程序， 打卡成功后退出切换账号，直到打卡完成所有账号(钉钉对ID设备记录，所以这条多账号打卡暂时没实现)。
  * 4.因为国内很多手机都对AlarmManager 进行了限制， 像红米1s ， 大约6分钟轮训回调一次，导致AlarmManager 回调时间不准时、在比如华为note8直接不回调
- * 导致打卡失败， 为了解决该问题，会对比较旧的系统使用AlarmManager回调， 对Android4.4或者以上系统使用TimgService 计时唤醒， 所以TimingService服务
+ * 导致打卡失败， 为了解决该问题，会对比较旧的系统使用AlarmManager回调， 对Android5.0或者以上系统使用TimgService 计时唤醒， 所以TimingService服务
  * 不能被杀死.
  */
 public class DingDingHelperAccessibilityService extends AccessibilityService {
