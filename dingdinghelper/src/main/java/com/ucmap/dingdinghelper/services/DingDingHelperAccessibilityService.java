@@ -294,6 +294,9 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
         String className = event.getClassName() + "";
                 /*当前窗口赋值*/
         DingDingHelperAccessibilityService.CURRENT_WINDOW = className;
+        if(findById(HOME_BOTTOM_WORK_ID)!=null){
+            DingDingHelperAccessibilityService.CURRENT_WINDOW = HOMEWINDOW;
+        }
         Log.i("Infoss", "current className:" + className + "   isTrue:" + (className.equals(LOGINWINDOW)));
                 /*如果当前的窗口登陆窗口*/
         if (className.equals(LOGINWINDOW) && STATE == STATE_UNCHECKED_IN) {
@@ -377,11 +380,13 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
     }
 
     private void windowContentChanged() {
-
+        Log.i("Infoss", "current window:" + CURRENT_WINDOW + "   is:" + isCheckInPager());
         switch (CURRENT_WINDOW) {
 
             case HOMEWINDOW:
                 setCurrentPagerId();
+
+
             /*如果当前状态是没有打卡状态*/
                 if (STATE == STATE_UNCHECKED_IN) {
                 /*检查下是否在考勤打卡页面*/
