@@ -294,7 +294,7 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
         String className = event.getClassName() + "";
                 /*当前窗口赋值*/
         DingDingHelperAccessibilityService.CURRENT_WINDOW = className;
-        if(findById(HOME_BOTTOM_WORK_ID)!=null){
+        if (findById(HOME_BOTTOM_WORK_ID) != null) {
             DingDingHelperAccessibilityService.CURRENT_WINDOW = HOMEWINDOW;
         }
         Log.i("Infoss", "current className:" + className + "   isTrue:" + (className.equals(LOGINWINDOW)));
@@ -514,8 +514,11 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
     /*设置当前Activity在哪个Fragment*/
     private void setCurrentPagerId() {
 
+        List<AccessibilityNodeInfo> listMine = null;
         AccessibilityNodeInfo mAccessibilityNodeInfo = getRootInActiveWindow();
-        List<AccessibilityNodeInfo> listMine = mAccessibilityNodeInfo.findAccessibilityNodeInfosByViewId(HEADER_MINE_ID);
+        if (mAccessibilityNodeInfo == null)
+            return;
+        listMine = mAccessibilityNodeInfo.findAccessibilityNodeInfosByViewId(HEADER_MINE_ID);
         if (listMine != null && !listMine.isEmpty()) {
             CURRENT_PAGER = MINE_PAGER;
             return;
