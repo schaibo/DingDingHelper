@@ -30,6 +30,7 @@ public class SPContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
+
         return true;
     }
 
@@ -69,6 +70,8 @@ public class SPContentProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(Uri uri) {
+
+//        System.gc();
         String[] path = uri.getPath().split(SEPARATOR);
         String type = path[1];
         String key = path[2];
