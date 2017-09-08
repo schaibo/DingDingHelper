@@ -145,7 +145,7 @@
 * 保证 am pm input 等命令正常执行。
 
 #### 常见问题
-* 常为系统 App 失败(Root -> 系统分区锁->BusyBox指令)
+* 成为系统 App 失败(Root -> 系统分区锁->BusyBox指令)
 		
 
 ### 结束语
