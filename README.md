@@ -129,15 +129,20 @@
 	
 	
 	```
-	mount -o rw,remount yassf2 /system/    //重新挂载	cp /data/app/com.ucmap.dingdinghelper.apk   /system/app/com.ucmap.dingdinghelper.apk  //复制app	到system/app/ 这个目录	chmod 777 /system/app/com.ucmap.dingdinghelper.apk        //修改文件权限	pm install -r \"/system/app/com.ucmap.dingdinghelper.apk\" //安装
-		 am start -n \"com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.MainActivity\" -a 	android.intent.action.MAIN -c android.intent.category.LAUNCHER"//启动app	rm /data/app/com.ucmap.dingdinghelper.apk  //删除原有的apk文件	mount -o remount,ro -t yaffs2 /dev/block/mtdblock3 /system    //恢复分区
+	mount -o rw,remount yassf2 /system/    //重新挂载
+	cp /data/app/com.ucmap.dingdinghelper.apk   /system/app/com.ucmap.dingdinghelper.apk  //复制app	到system/app/ 这个目录
+	chmod 777 /system/app/com.ucmap.dingdinghelper.apk        //修改文件权限
+	pm install -r \"/system/app/com.ucmap.dingdinghelper.apk\" //安装
+		 am start -n \"com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.MainActivity\" -a 	android.intent.action.MAIN -c android.intent.category.LAUNCHER"//启动app
+	rm /data/app/com.ucmap.dingdinghelper.apk  //删除原有的apk文件
+	mount -o remount,ro -t yaffs2 /dev/block/mtdblock3 /system    //恢复分区
 	```
 	
 	看下adj值
 	
 	![](./adj.png)
 	
-	adj值为-12 , 相当低了, 前台可见进程值0 , 进程神了 .
+	adj值为-12 , 相当低了, 前台可见进程值0 。
 	
 #### 注意事项
 * 保证手机完整 Root .
@@ -149,8 +154,7 @@
 		
 
 ### 结束语
-    安装上钉钉自动打卡 , 你基本可以开心玩耍 , 每天吃完早餐再去上班 , 不用急急忙忙冲上去打完卡在下来买早餐 ...
-    最后我想说: 技术无错 , 看你怎么应用 , 还我快播啊 . (ps:客官们不要迟到啊!)
+    该库仅供参考学习技术使用 。(ps:客官们不要迟到啊!)
     
 ### 欢迎Fork,PR,Star!!  [钉钉自动打卡](https://github.com/Justson/DingDingHelper.git)   
 
