@@ -154,7 +154,7 @@
 		
 
 ### 结束语
-    该库仅供参考学习技术使用 。(ps:客官们不要迟到啊!)
+    该库仅供参考学习技术使用。(PS:攻城狮们不要迟到啊!)
     
 ### 欢迎Fork,PR,Star!!  [钉钉自动打卡](https://github.com/Justson/DingDingHelper.git)   
 
