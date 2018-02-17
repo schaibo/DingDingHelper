@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 
 public class PixelActivityUnion {
@@ -89,7 +88,6 @@ public class PixelActivityUnion {
             throw new NullPointerException("context is null");
         if (activity == null)
             throw new NullPointerException("target activity must nonnull");
-        Log.i("Infoss", "已经注册广播");
         mScreenStateBroadcast = new ScreenStateBroadcast();
         IntentFilter mIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         mIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -101,7 +99,6 @@ public class PixelActivityUnion {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.i("Infoss", "action:" + intent.getAction());
             /*开锁*/
             if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
                 onScreenOn();

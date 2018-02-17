@@ -19,7 +19,6 @@ package com.ucmap.dingdinghelper.timing;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.ucmap.dingdinghelper.app.App;
@@ -43,7 +42,6 @@ public class TimingBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("Infoss", "TimingBroadcastReceiver  已经被系统回调");
         long tmp = System.currentTimeMillis();
         if (tmp - lastTime <= 15000) {
             Toast.makeText(App.mContext, "上一次打卡时间没超过15s", Toast.LENGTH_SHORT).show();
@@ -75,7 +73,6 @@ public class TimingBroadcastReceiver extends BroadcastReceiver {
             }
             flag = 1;
         }
-        Log.i("Infoss", "list:" + mList);
         if (!mList.isEmpty()) {
             new BootOrderThread(mList, flag).start();
         } else {

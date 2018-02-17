@@ -68,7 +68,7 @@
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.i("Infoss", "TimingBroadcastReceiver  已经被系统回调");
+        Log.i("Info", "TimingBroadcastReceiver  已经被系统回调");
         //唤醒屏幕,解锁
         mList.add("input keyevent 26");
         /*从下往上滑动解锁*/

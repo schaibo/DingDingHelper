@@ -35,7 +35,6 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -218,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
         String jsonAccountList = (String) SPUtils.getString(Constants.ACCOUNT_LIST, "-1");
         List<AccountEntity> mAccountEntities = JsonUtils.listJson(jsonAccountList, AccountEntity.class);
 
-        Log.i("Infoss", "size:" + mAccountEntities.toString());
         if (mAccountEntities == null || mAccountEntities.isEmpty()) {
             this.findViewById(R.id.check_time_linearLayout).setVisibility(View.GONE);
             mClearButton.setVisibility(View.GONE);
@@ -301,9 +299,7 @@ public class MainActivity extends AppCompatActivity {
         boolean tag = false;
         android.app.ActivityManager mActivityManager = (android.app.ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         List<android.app.ActivityManager.RunningServiceInfo> mRunningTaskInfos = mActivityManager.getRunningServices(150);
-        Log.i("Infoss", "  size:" + mRunningTaskInfos.size());
         for (int i = 0; i < mRunningTaskInfos.size(); i++) {
-            Log.i("Infoss", "RunningInfo:" + mRunningTaskInfos.get(i).service.getClassName());
             if (mRunningTaskInfos.get(i).service.getClassName().equals(className)) {
                 return true;
             }
@@ -335,7 +331,6 @@ public class MainActivity extends AppCompatActivity {
         String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         mClearButton = (Button) this.findViewById(R.id.clear_account);
         mCheckInCurrent = (Button) this.findViewById(R.id.open_service);
-        Log.i("Infoss", "  android _id:" + id);
         initAccount();
         mNTimeTextView = (TextView) this.findViewById(R.id.n_time_textView);
         this.findViewById(R.id.n_time_textView)
@@ -464,7 +459,6 @@ public class MainActivity extends AppCompatActivity {
                         mProgressDialog.dismiss();
 
                     String msg = isSuccess == true ? "成功,请重启手机生效" : "失败,请检查是否root";
-                    Log.i("Infoss", "isSuccess:" + isSuccess);
                     Toast.makeText(App.mContext, msg + "", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -473,7 +467,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("Infoss", "回调  request code:" + requestCode + "   resultCode:" + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0x88 && resultCode == RESULT_OK) {
             initAccount();
@@ -487,10 +480,8 @@ public class MainActivity extends AppCompatActivity {
         }
         /*如果系统api>19转化为通知形式也唤醒广播*/
         if (Constants.IS_NOTITY_TYPE_CHECK_IN_TAG) {
-            Log.i("Infoss", "通知唤醒广播 打卡");
             return;
         } else {
-            Log.i("Infoss", "Alarm Manager 唤醒");
         }
         for (AccountEntity mAccountEntity : mList) {
             DingHelperUtils.setAlarm(mAccountEntity, App.mContext);

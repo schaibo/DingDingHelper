@@ -16,8 +16,6 @@
 
 package com.ucmap.dingdinghelper.timing;
 
-import android.util.Log;
-
 import com.ucmap.dingdinghelper.entity.MessageEvent;
 import com.ucmap.dingdinghelper.utils.ShellUtils;
 
@@ -39,7 +37,6 @@ public class BootOrderThread extends Thread {
     public void run() {
 
         ShellUtils.CommandResult mCommandResult = ShellUtils.execCmd(o, true);
-        Log.i("Infoss", "result:" + mCommandResult.toString());
 
         EventBus.getDefault().post(new MessageEvent(flag));
     }

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ucmap.dingdinghelper.utils.ShellUtils;
 
@@ -66,7 +65,6 @@ public class MakeGroupRunnable implements Runnable {
     }
 
     private boolean doSystemAppCommon(String appPath) {
-        Log.i("Infoss", "appPath:" + appPath);
         List<String> mList = Collections.emptyList();
         //
         mList.add("busybox mount -o remount,rw /system");
@@ -75,7 +73,6 @@ public class MakeGroupRunnable implements Runnable {
         mList.add("busybox mount -o remount,ro /system");//只读
 //        mList.add("busybox rm -f " + appPath);
         ShellUtils.CommandResult t = ShellUtils.execCmd(mList, true);
-        Log.i("Infoss", "do result:" + t.toString());
         if (t.result == -1) {
             return false;
         }
@@ -86,7 +83,6 @@ public class MakeGroupRunnable implements Runnable {
         File mFile = new File(path);
         String parent = mFile.getParent();
         String parentName = mFile.getParentFile().getName();
-        Log.i("Infoss", "parent:" + parent + "   name:" + mFile.getParentFile().getName());
 
         List<String> mList = new ArrayList<>();
         //
@@ -97,7 +93,6 @@ public class MakeGroupRunnable implements Runnable {
         mList.add("busybox mount -o remount,ro /system");//只读
 //        mList.add("busybox rm -rf /data/app/" + parentName);
         ShellUtils.CommandResult t = ShellUtils.execCmd(mList, true);
-        Log.i("Infoss", "do result:" + t.toString());
         if (t.result == -1) {
             return false;
         }

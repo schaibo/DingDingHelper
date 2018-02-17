@@ -19,7 +19,6 @@ package com.ucmap.dingdinghelper.utils;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.PowerManager;
-import android.util.Log;
 
 import com.ucmap.dingdinghelper.entity.AccountEntity;
 import com.ucmap.dingdinghelper.sphelper.SPUtils;
@@ -42,10 +41,8 @@ public class DingHelperUtils {
         for (int i = 1; i <= 6; i++) {
 //            int tm = isAdd() ? Integer.parseInt(hm[1]) + mRandom.nextInt(5) : Integer.parseInt(hm[1]) - mRandom.nextInt(5);
             TimingManagerUtil.setTiming(context, 2, Integer.parseInt(hm[0]), Integer.parseInt(hm[1]), id + i, i);
-            Log.i("Infoss", "闹钟ID:" + (id + i) + "   hour:" + Integer.parseInt(hm[0]) + "   min: " + Integer.parseInt(hm[1]) + "   week:" + i);
 //            int ta = isAdd() ? Integer.parseInt(nm[1]) + mRandom.nextInt(5) : Integer.parseInt(nm[1]) - mRandom.nextInt(5);
             TimingManagerUtil.setTiming(context, 2, Integer.parseInt(nm[0]), Integer.parseInt(nm[1]), id + i + 10, i);
-            Log.i("Infoss", "闹钟ID:" + (id + i + 10) + "   hour:" + Integer.parseInt(nm[0]) + "   min: " + Integer.parseInt(nm[1]) + "   week:" + i);
         }
     }
 
@@ -55,13 +52,11 @@ public class DingHelperUtils {
 
     public static boolean isScreenLocked(Context context) {
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        Log.i("Infoss", "isScreenLocked:" + keyguardManager.inKeyguardRestrictedInputMode());
         return keyguardManager.inKeyguardRestrictedInputMode();
     }
 
     public static boolean isScreenLight(Context context) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        Log.i("Infoss", "isScreenLight:" + pm.isScreenOn());
         return pm.isScreenOn();
     }
 }
