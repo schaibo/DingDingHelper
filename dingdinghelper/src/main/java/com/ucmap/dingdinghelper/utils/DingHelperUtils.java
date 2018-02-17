@@ -1,3 +1,19 @@
+/*
+ * Copyright (C)  Justson(https://github.com/Justson/DingDingHelper)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.ucmap.dingdinghelper.utils;
 
 import android.app.KeyguardManager;
@@ -10,16 +26,6 @@ import com.ucmap.dingdinghelper.sphelper.SPUtils;
 import com.ucmap.dingdinghelper.timing.TimingManagerUtil;
 
 import java.util.Random;
-
-/**
- * <b>@项目名：</b> dingdinghelper<br>
- * <b>@包名：</b>com.ucmap.dingdinghelper<br>
- * <b>@创建者：</b> cxz --  just<br>
- * <b>@创建时间：</b> &{DATE}<br>
- * <b>@公司：</b> 宝诺科技<br>
- * <b>@邮箱：</b> cenxiaozhong.qqcom@qq.com<br>
- * <b>@描述</b><br>
- */
 
 public class DingHelperUtils {
 
