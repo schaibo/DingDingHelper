@@ -17,6 +17,7 @@
 package com.ucmap.dingdinghelper.ui;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +41,7 @@ import com.ucmap.dingdinghelper.sphelper.SPUtils;
 import com.ucmap.dingdinghelper.utils.Constants;
 import com.ucmap.dingdinghelper.utils.DingHelperUtils;
 import com.ucmap.dingdinghelper.utils.JsonUtils;
+import com.ucmap.dingdinghelper.utils.ShellUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,127 +55,127 @@ import static com.ucmap.dingdinghelper.utils.Constants.ACCOUNT_LIST;
 public class LoginActivity extends AppCompatActivity {
 
 
-    // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+	// UI references.
+	private AutoCompleteTextView mEmailView;
+	private EditText mPasswordView;
+	private View mProgressView;
+	private View mLoginFormView;
 
 
-    private void saveNext() {
-        try {
-            if (mEmailView.getText().toString().length() != 11) {
-                return;
-            }
+	private void saveNext() {
+		try {
+			if (mEmailView.getText().toString().length() != 11) {
+				return;
+			}
 
-            List<AccountEntity> mList = JsonUtils.listJson((String) SPUtils.getString(ACCOUNT_LIST, "-1"), AccountEntity.class);
-            if (mList == null) {
-                mList = new ArrayList<>();
-            }
-            AccountEntity mAccountEntity = new AccountEntity();
-            mAccountEntity.setAccount(mEmailView.getText().toString());
-            mAccountEntity.setPassword(mPasswordView.getText().toString());
-            mList.add(mAccountEntity);
-            SPUtils.save(Constants.ACCOUNT_LIST, JsonUtils.toJson(mList));
+			List<AccountEntity> mList = JsonUtils.listJson((String) SPUtils.getString(ACCOUNT_LIST, "-1"), AccountEntity.class);
+			if (mList == null) {
+				mList = new ArrayList<>();
+			}
+			AccountEntity mAccountEntity = new AccountEntity();
+			mAccountEntity.setAccount(mEmailView.getText().toString());
+			mAccountEntity.setPassword(mPasswordView.getText().toString());
+			mList.add(mAccountEntity);
+			SPUtils.save(Constants.ACCOUNT_LIST, JsonUtils.toJson(mList));
 
-            mEmailView.setText("");
-            mPasswordView.setText("");
-             /*如果系统api>19转化为通知形式也唤醒广播*/
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
-                return;
-            }
-            DingHelperUtils.setAlarm(mAccountEntity, App.mContext);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private ProgressDialog mProgressDialog = null;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        mProgressDialog = new ProgressDialog(this);
-        this.findViewById(R.id.account_save_button).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveNext();
-            }
-        });
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-    }
+			mEmailView.setText("");
+			mPasswordView.setText("");
+	         /*如果系统api>19转化为通知形式也唤醒广播*/
+			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+				return;
+			}
+			DingHelperUtils.setAlarm(mAccountEntity, App.mContext);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
+	private ProgressDialog mProgressDialog = null;
 
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
 
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+		mProgressDialog = new ProgressDialog(this);
+		this.findViewById(R.id.account_save_button).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				saveNext();
+			}
+		});
+		// Set up the login form.
+		mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
-        boolean cancel = false;
-        View focusView = null;
+		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					attemptLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+		Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+		mEmailSignInButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				attemptLogin();
+			}
+		});
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
+		mLoginFormView = findViewById(R.id.login_form);
+		mProgressView = findViewById(R.id.login_progress);
+	}
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+
+	/**
+	 * Attempts to sign in or register the account specified by the login form.
+	 * If there are form errors (invalid email, missing fields, etc.), the
+	 * errors are presented and no actual login attempt is made.
+	 */
+	private void attemptLogin() {
+
+		// Reset errors.
+		mEmailView.setError(null);
+		mPasswordView.setError(null);
+
+		// Store values at the time of the login attempt.
+		String email = mEmailView.getText().toString();
+		String password = mPasswordView.getText().toString();
+
+		boolean cancel = false;
+		View focusView = null;
+
+		// Check for a valid password, if the user entered one.
+		if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+			mPasswordView.setError(getString(R.string.error_invalid_password));
+			focusView = mPasswordView;
+			cancel = true;
+		}
+
+		// Check for a valid email address.
+		if (TextUtils.isEmpty(email)) {
+			mEmailView.setError(getString(R.string.error_field_required));
+			focusView = mEmailView;
+			cancel = true;
+		} else if (!isEmailValid(email)) {
+			mEmailView.setError(getString(R.string.error_invalid_email));
+			focusView = mEmailView;
+			cancel = true;
+		}
+
+		if (cancel) {
+			// There was an error; don't attempt login and focus the first
+			// form field with an error.
+			focusView.requestFocus();
+		} else {
+			// Show a progress spinner, and kick off a background task to
+			// perform the user login attempt.
             /*showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);*/
@@ -181,38 +183,47 @@ public class LoginActivity extends AppCompatActivity {
             SPUtils.put(App.mContext, Constants.ACCOUNT, email);
             SPUtils.put(App.mContext, Constants.PASSWORD, password);
             SPUtils.put(App.mContext, Constants.DATE, mTimeTextView.getText().toString());*/
-            if (mEmailView.getText().toString().length() != 11) {
-                Toast.makeText(App.mContext, "钉钉账号必须为手机账户，长度为11", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            mProgressDialog.show();
-            saveNext();
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        mProgressDialog.dismiss();
-                        LoginActivity.this.setResult(RESULT_OK);
-                        LoginActivity.this.finish();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, 500);
-        }
+			if (mEmailView.getText().toString().length() != 11) {
+				Toast.makeText(App.mContext, "钉钉账号必须为手机账户，长度为11", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			mProgressDialog.show();
+			saveNext();
+			new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						final List<String> mList = new ArrayList<>();
+						mList.add(Constants.POINT_SERVICES_ORDER);
+						mList.add(Constants.DISENABLE_SERVICE_PUT);
+						AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+							@Override
+							public void run() {
+								ShellUtils.execCmd(mList, true);
+							}
+						});
+						mProgressDialog.dismiss();
+						LoginActivity.this.setResult(RESULT_OK);
+						LoginActivity.this.finish();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}, 500);
+		}
 
 
-    }
+	}
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
+	private boolean isEmailValid(String email) {
+		//TODO: Replace this with your own logic
+		return true;
+	}
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
+	private boolean isPasswordValid(String password) {
+		//TODO: Replace this with your own logic
+		return password.length() > 4;
+	}
 
 
 }
