@@ -94,7 +94,7 @@ public class TimingService extends Service {
 			mNotifyThread = new NotifyThread();
 			runing_monitor = true;
 			mNotifyThread.setPriority(Thread.MAX_PRIORITY);
-		    /*启动通知线程*/
+			/*启动通知线程*/
 			mNotifyThread.start();
 		}
 	}
@@ -197,8 +197,8 @@ public class TimingService extends Service {
 		}
 
 		NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-
 		mNotificationManager.cancel(NOTIFICATION_ID_PROGRESS_ID);
+		mNotificationManager.cancel(NOTIFICATION_ID);
 	}
 
 	public static class InnerService extends Service {
