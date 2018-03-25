@@ -39,6 +39,7 @@
         android:background="@drawable/selector_drawable_for_btn"
         android:text="现在打卡"
         android:textColor="#ffffff"
+        android:visibility="gone"
         />
 
 

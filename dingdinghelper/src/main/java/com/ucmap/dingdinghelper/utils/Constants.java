@@ -12,6 +12,7 @@ public interface Constants {
     String DATE = "date";
 
 
+    int RESET_PASSWORD=0x1100;
     String MORNING_CHECK_IN_TIME = "MORNING_CHECK_IN_TIME";
     String AFTERNOON_CHECK_IN_TIME = "AFTERNOON_CHECK_IN_TIME";
 

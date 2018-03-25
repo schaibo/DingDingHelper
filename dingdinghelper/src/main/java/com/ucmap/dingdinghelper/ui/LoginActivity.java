@@ -17,7 +17,6 @@
 package com.ucmap.dingdinghelper.ui;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,16 +36,19 @@ import android.widget.Toast;
 import com.ucmap.dingdinghelper.R;
 import com.ucmap.dingdinghelper.app.App;
 import com.ucmap.dingdinghelper.entity.AccountEntity;
+import com.ucmap.dingdinghelper.entity.MessageEvent;
 import com.ucmap.dingdinghelper.sphelper.SPUtils;
 import com.ucmap.dingdinghelper.utils.Constants;
 import com.ucmap.dingdinghelper.utils.DingHelperUtils;
 import com.ucmap.dingdinghelper.utils.JsonUtils;
-import com.ucmap.dingdinghelper.utils.ShellUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.ucmap.dingdinghelper.utils.Constants.ACCOUNT_LIST;
+import static com.ucmap.dingdinghelper.utils.Constants.RESET_PASSWORD;
 
 
 /**
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
 
 			mEmailView.setText("");
 			mPasswordView.setText("");
-	         /*如果系统api>19转化为通知形式也唤醒广播*/
+			 /*如果系统api>19转化为通知形式也唤醒广播*/
 			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
 				return;
 			}
@@ -176,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
 		} else {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
-            /*showProgress(true);
+		    /*showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);*/
             /*SPUtils.put(App.mContext, Constants.IS_SIGN, true);
@@ -189,19 +191,12 @@ public class LoginActivity extends AppCompatActivity {
 			}
 			mProgressDialog.show();
 			saveNext();
+
+			EventBus.getDefault().post(new MessageEvent(RESET_PASSWORD));
 			new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						final List<String> mList = new ArrayList<>();
-						mList.add(Constants.POINT_SERVICES_ORDER);
-						mList.add(Constants.DISENABLE_SERVICE_PUT);
-						AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
-							@Override
-							public void run() {
-								ShellUtils.execCmd(mList, true);
-							}
-						});
 						mProgressDialog.dismiss();
 						LoginActivity.this.setResult(RESULT_OK);
 						LoginActivity.this.finish();
