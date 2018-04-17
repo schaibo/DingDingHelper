@@ -92,15 +92,12 @@
 	```
 	
 	switch (eventType) {
-            /*窗口变化*/
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 windowContentChanged();
                 break;
-            //当通知栏发生改变时
-            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
+            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
                 notificationChanged(event);
                 break;
-            //当Activity等的状态发生改变时
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                 windowChanged(event);
                 break;
