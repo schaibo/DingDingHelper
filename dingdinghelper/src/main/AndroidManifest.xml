@@ -34,6 +34,13 @@
             </intent-filter>
 
         </activity>
+
+        <activity
+            android:name=".ui.SaveClickPositionActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppThemeMain"
+            >
+        </activity>
         <activity
             android:name=".pixelsdk.PointActivity"
             android:excludeFromRecents="true"

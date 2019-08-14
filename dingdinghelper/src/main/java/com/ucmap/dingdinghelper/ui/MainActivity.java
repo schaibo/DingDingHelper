@@ -29,13 +29,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -50,6 +50,7 @@ import com.ucmap.dingdinghelper.R;
 import com.ucmap.dingdinghelper.app.App;
 import com.ucmap.dingdinghelper.common.MakeGroupRunnable;
 import com.ucmap.dingdinghelper.entity.AccountEntity;
+import com.ucmap.dingdinghelper.entity.PositionEntity;
 import com.ucmap.dingdinghelper.pixelsdk.ActivityManager;
 import com.ucmap.dingdinghelper.pixelsdk.PixelActivityUnion;
 import com.ucmap.dingdinghelper.pixelsdk.PointActivity;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private AlertDialog mAlertDialog;
     private ProgressDialog mProgressDialog;
+    private Button mSaveClickPosition;
+    private PositionEntity mPositionEntity;
 
     private void updateUI(String time) {
         mHandler.removeCallbacks(m);
@@ -251,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void toShowBeSystemApp(final ApplicationInfo applicationInfo) {
-        if (Looper.myLooper() != Looper.getMainLooper()) {
+        /*if (Looper.myLooper() != Looper.getMainLooper()) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -263,7 +266,8 @@ public class MainActivity extends AppCompatActivity {
         if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
             mDoSystemApp.setVisibility(View.GONE);
         else
-            mDoSystemApp.setVisibility(View.VISIBLE);
+            mDoSystemApp.setVisibility(View.VISIBLE);*/
+        mDoSystemApp.setVisibility(View.GONE);
     }
 
     private void isSystemApp() {
@@ -328,6 +332,8 @@ public class MainActivity extends AppCompatActivity {
         String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         mClearButton = (Button) this.findViewById(R.id.clear_account);
         mCheckInCurrent = (Button) this.findViewById(R.id.open_service);
+        mSaveClickPosition = (Button) this.findViewById(R.id.save_click_position);
+        mSaveClickPosition.setOnClickListener(mMainListener);
         initAccount();
         mNTimeTextView = (TextView) this.findViewById(R.id.n_time_textView);
         this.findViewById(R.id.n_time_textView)
@@ -347,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //当前应用的代码执行目录
-                if (CmdTools.getRootCmd() != null) {
+                if (CmdTools.isRooted()) {
                     isRoot = true;
                 } else {
                     if (mClearButton != null) {
@@ -364,6 +370,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+
+        String p = SPUtils.getString("position_entity", "");
+        if (!TextUtils.isEmpty(p)) {
+            mPositionEntity = JsonUtils.parserJson(p, PositionEntity.class);
+            mSaveClickPosition.setText("修改点击坐标");
+        }
+
     }
 
     private View.OnClickListener mMainListener = new View.OnClickListener() {
@@ -376,11 +389,23 @@ public class MainActivity extends AppCompatActivity {
 			}*/
             switch (v.getId()) {
 
+                case R.id.save_click_position:
+                    Intent mIntent0 = new Intent(MainActivity.this, SaveClickPositionActivity.class);
+                    startActivityForResult(mIntent0, 0x87);
+                    break;
                 case R.id.save_password:
+                    if (mPositionEntity == null) {
+                        Toast.makeText(MainActivity.this, "请先保存坐标", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivityForResult(mIntent, 0x88);
                     break;
                 case R.id.open_service:
+                    if (mPositionEntity == null) {
+                        Toast.makeText(MainActivity.this, "请先保存坐标", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -403,16 +428,13 @@ public class MainActivity extends AppCompatActivity {
                     showPickerAfterNoon();
                     break;
                 case R.id.do_system_app:
-//					doSystemAppDialog();
-
                     break;
             }
         }
     };
 
+    @Deprecated
     private void doSystemAppDialog() {
-
-        //
         if (mAlertDialog == null)
             mAlertDialog = new AlertDialog.Builder(this)//
                     .setMessage("确定要成为系统App吗？")//
@@ -425,7 +447,6 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mAlertDialog.dismiss();
-                            doSystemApp();
                         }
                     }).create();
 
@@ -434,6 +455,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isMaking = false;
 
+    @Deprecated
     private void doSystemApp() {
         if (!isMaking) {
             isMaking = true;

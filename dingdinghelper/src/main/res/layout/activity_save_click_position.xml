@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/windowbackgroud"
+    android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/colorPrimary_dark"
+        android:titleTextColor="@android:color/white">
+    </android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="考勤打卡①处坐标："
+            />
+
+        <EditText
+            android:id="@+id/xEdt1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:gravity="center"
+            android:hint="x"
+            android:inputType="number"
+            android:maxLength="5"/>
+
+
+        <EditText
+            android:id="@+id/yEdt1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
+            android:gravity="center"
+            android:hint="y"
+            android:inputType="number"
+            android:maxLength="5"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="考勤打卡②处坐标："
+            />
+
+        <EditText
+            android:id="@+id/xEdt2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:gravity="center"
+            android:hint="x"
+            android:inputType="number"
+            android:maxLength="5"/>
+
+
+        <EditText
+            android:id="@+id/yEdt2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
+            android:gravity="center"
+            android:hint="y"
+            android:inputType="number"
+            android:maxLength="5"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="考勤打卡③处坐标："
+            />
+
+        <EditText
+            android:id="@+id/xEdt3"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:gravity="center"
+            android:hint="x"
+            android:inputType="number"
+            android:maxLength="5"/>
+
+
+        <EditText
+            android:id="@+id/yEdt3"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
+            android:gravity="center"
+            android:hint="y"
+            android:inputType="number"
+            android:maxLength="5"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="考勤打卡④处坐标："
+            />
+
+        <EditText
+            android:id="@+id/xEdt4"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:gravity="center"
+            android:hint="x"
+            android:inputType="number"
+            android:maxLength="5"/>
+
+
+        <EditText
+            android:id="@+id/yEdt4"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
+            android:gravity="center"
+            android:hint="y"
+            android:inputType="number"
+            android:maxLength="5"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/selector_drawable_for_btn"
+        android:text="保存"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:visibility="visible"
+        />
+</LinearLayout>
