@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
 
     signingConfigs {
         release {
@@ -22,8 +21,8 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.ucmap.dingdinghelper"
-        minSdkVersion 16
+        applicationId "com.aa.bb"
+        minSdkVersion 18
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -72,4 +71,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.coolerfall:android-app-daemon:1.2.0'
+    compile project(path: ':AdbLib')
+    compile project(path: ':common')
 }

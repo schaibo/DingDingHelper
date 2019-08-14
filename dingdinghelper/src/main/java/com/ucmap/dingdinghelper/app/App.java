@@ -16,21 +16,34 @@
 
 package com.ucmap.dingdinghelper.app;
 
-import android.app.Application;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
+import com.alipay.hulu.common.application.LauncherApplication;
+import com.alipay.hulu.common.tools.CmdTools;
 import com.ucmap.dingdinghelper.sphelper.SPUtils;
 
 
-public class App extends Application {
+public class App extends LauncherApplication {
 
     public static Context mContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        SPUtils.init(this);
         mContext = this;
+        SPUtils.init(this);
+        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean connection = CmdTools.generateConnection();
+                Log.e("MainActivity", "connection:" + connection);
+            }
+        });
+    }
 
+    @Override
+    protected void init() {
     }
 }

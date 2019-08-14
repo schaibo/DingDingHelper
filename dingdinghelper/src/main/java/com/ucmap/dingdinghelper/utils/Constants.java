@@ -2,6 +2,8 @@ package com.ucmap.dingdinghelper.utils;
 
 import android.os.Build;
 
+import com.ucmap.dingdinghelper.app.App;
+
 
 public interface Constants {
     String IS_SIGN = "is_sign";
@@ -12,14 +14,14 @@ public interface Constants {
     String DATE = "date";
 
 
-    int RESET_PASSWORD=0x1100;
+    int RESET_PASSWORD = 0x1100;
     String MORNING_CHECK_IN_TIME = "MORNING_CHECK_IN_TIME";
     String AFTERNOON_CHECK_IN_TIME = "AFTERNOON_CHECK_IN_TIME";
 
     String ACCOUNT_LIST = "acccount_list";
 
 
-    String POINT_SERVICES_ORDER = "settings put secure enabled_accessibility_services  com.ucmap.dingdinghelper/com.ucmap.dingdinghelper.services.DingDingHelperAccessibilityService";
+    String POINT_SERVICES_ORDER = "settings put secure enabled_accessibility_services  " + App.getContext().getPackageName() + "/com.ucmap.dingdinghelper.services.DingDingHelperAccessibilityService";
 
     String ENABLE_SERVICE_PUT = "settings put secure accessibility_enabled 1";
 

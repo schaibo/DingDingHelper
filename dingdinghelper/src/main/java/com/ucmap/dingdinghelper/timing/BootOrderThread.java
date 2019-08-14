@@ -16,8 +16,11 @@
 
 package com.ucmap.dingdinghelper.timing;
 
+import android.os.SystemClock;
+
+import com.alipay.hulu.common.tools.CmdTools;
+import com.alipay.hulu.common.utils.LogUtil;
 import com.ucmap.dingdinghelper.entity.MessageEvent;
-import com.ucmap.dingdinghelper.utils.ShellUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,16 +31,19 @@ public class BootOrderThread extends Thread {
 
     private List<String> o;
     private int flag;
-    public BootOrderThread(List<String> o,int flag) {
+
+    public BootOrderThread(List<String> o, int flag) {
         this.o = o;
-        this.flag=flag;
+        this.flag = flag;
     }
 
     @Override
     public void run() {
 
-        ShellUtils.CommandResult mCommandResult = ShellUtils.execCmd(o, true);
-
+//        ShellUtils.CommandResult mCommandResult = ShellUtils.execCmd(o, true);
+        List<String> results = CmdTools.execHighPrivilegeCmds(o, 3000);
+        LogUtil.i("BootOrderThread", "result:" + results + " o:" + o);
+        SystemClock.sleep(2000);
         EventBus.getDefault().post(new MessageEvent(flag));
     }
 }

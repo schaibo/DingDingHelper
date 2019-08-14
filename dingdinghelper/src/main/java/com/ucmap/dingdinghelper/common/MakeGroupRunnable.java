@@ -21,11 +21,6 @@ import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
-import com.ucmap.dingdinghelper.utils.ShellUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -65,7 +60,7 @@ public class MakeGroupRunnable implements Runnable {
     }
 
     private boolean doSystemAppCommon(String appPath) {
-        List<String> mList = Collections.emptyList();
+       /* List<String> mList = Collections.emptyList();
         //
         mList.add("busybox mount -o remount,rw /system");
         mList.add("busybox  cp -r " + appPath + " /system/app/" + (mContext.getPackageName() + ".apk"));
@@ -75,12 +70,12 @@ public class MakeGroupRunnable implements Runnable {
         ShellUtils.CommandResult t = ShellUtils.execCmd(mList, true);
         if (t.result == -1) {
             return false;
-        }
-        return true;
+        }*/
+        return false;
     }
 
     private boolean doSystemAppBeyongLollopop(String path) {
-        File mFile = new File(path);
+        /*File mFile = new File(path);
         String parent = mFile.getParent();
         String parentName = mFile.getParentFile().getName();
 
@@ -95,8 +90,8 @@ public class MakeGroupRunnable implements Runnable {
         ShellUtils.CommandResult t = ShellUtils.execCmd(mList, true);
         if (t.result == -1) {
             return false;
-        }
-        return true;
+        }*/
+        return false;
     }
 
     private String findAppPathByApplicationInfo(String packageName, List<ApplicationInfo> infos) {

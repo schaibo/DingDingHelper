@@ -32,4 +32,11 @@ public class MessageEvent {
     public void setFlag_bit(int flag_bit) {
         this.flag_bit = flag_bit;
     }
+
+    @Override
+    public String toString() {
+        return "MessageEvent{" +
+                "flag_bit=" + flag_bit +
+                '}';
+    }
 }

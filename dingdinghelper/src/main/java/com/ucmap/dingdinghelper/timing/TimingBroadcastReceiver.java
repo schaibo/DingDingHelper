@@ -43,8 +43,8 @@ public class TimingBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         long tmp = System.currentTimeMillis();
-        if (tmp - lastTime <= 15000) {
-            Toast.makeText(App.mContext, "上一次打卡时间没超过15s", Toast.LENGTH_SHORT).show();
+        if (tmp - lastTime <= 5000) {
+            Toast.makeText(App.mContext, "上一次打卡时间没超过5s", Toast.LENGTH_SHORT).show();
             return;
         }
         lastTime = tmp;
@@ -57,6 +57,15 @@ public class TimingBroadcastReceiver extends BroadcastReceiver {
 
         List<String> mList = new ArrayList<String>();
         if (!DingDingHelperAccessibilityService.IS_ENABLE_DINGDINGHELPERACCESSIBILITYSERVICE) {
+
+            if (!DingHelperUtils.isScreenLight(App.mContext)) {
+                mList.add("input keyevent 26");
+            }
+
+            if (DingHelperUtils.isScreenLocked(App.mContext)) {
+                /*从下往上滑动解锁*/
+                mList.add("input swipe 200 800 200 100");
+            }
 
             mList.add(Constants.POINT_SERVICES_ORDER);
             mList.add(Constants.ENABLE_SERVICE_PUT);

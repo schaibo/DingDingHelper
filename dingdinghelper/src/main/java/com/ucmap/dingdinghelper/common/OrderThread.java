@@ -16,13 +16,18 @@
 
 package com.ucmap.dingdinghelper.common;
 
-import com.ucmap.dingdinghelper.utils.ShellUtils;
+import com.alipay.hulu.common.tools.CmdTools;
+import com.alipay.hulu.common.utils.LogUtil;
 
 import java.util.List;
 
 
 public class OrderThread extends Thread {
 
+
+    static {
+        CmdTools.generateConnection();
+    }
 
     private List<String> mList = null;
 
@@ -33,7 +38,10 @@ public class OrderThread extends Thread {
     @Override
     public void run() {
         if (mList != null && !mList.isEmpty()) {
-            ShellUtils.CommandResult mCommandResult = ShellUtils.execCmd(mList, true);
+//            ShellUtils.CommandResult mCommandResult = ShellUtils.execCmd(mList, false);
+            String result = CmdTools._execAdbCmd(mList.get(0), 3000);
+            LogUtil.e("OrderThread", "result:" + result);
+
         }
     }
 }

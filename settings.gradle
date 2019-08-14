@@ -1,1 +1,1 @@
-include ':dingdinghelper'
+include ':dingdinghelper', ':AdbLib', ':common', ':androidWebsockets', ':mdlibrary', ':permission'
