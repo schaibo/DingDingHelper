@@ -16,10 +16,19 @@
     </android.support.v7.widget.Toolbar>
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:text="由于H5页面内无法获取到控件坐标，无法进行模拟点击，这里需要输入几个关键控件的坐标位置"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -60,7 +69,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="考勤打卡②处坐标："
+            android:text="上班打卡②处坐标："
             />
 
         <EditText
@@ -94,7 +103,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="考勤打卡③处坐标："
+            android:text="下班打卡③处坐标："
             />
 
         <EditText
@@ -128,7 +137,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="考勤打卡④处坐标："
+            android:text="返回箭头④处坐标："
             />
 
         <EditText
