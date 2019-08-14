@@ -53,6 +53,7 @@ import com.ucmap.dingdinghelper.R;
 import com.ucmap.dingdinghelper.app.App;
 import com.ucmap.dingdinghelper.entity.AccountEntity;
 import com.ucmap.dingdinghelper.entity.MessageEvent;
+import com.ucmap.dingdinghelper.entity.PositionEntity;
 import com.ucmap.dingdinghelper.sphelper.SPUtils;
 import com.ucmap.dingdinghelper.ui.MainActivity;
 import com.ucmap.dingdinghelper.utils.Constants;
@@ -238,8 +239,17 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
      */
     private int index = 0;
 
-    private void init() {
+    PositionEntity mPositionEntity = null;
 
+    private void init() {
+        String p = SPUtils.getString("position_entity", "");
+        if (!TextUtils.isEmpty(p)) {
+            mPositionEntity = JsonUtils.parserJson(p, PositionEntity.class);
+            if (mPositionEntity == null) {
+                Toast.makeText(App.mContext, "请先保存点击坐标", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         String jsonAccountList = (String) SPUtils.getString(Constants.ACCOUNT_LIST, "-1");
         if (TextUtils.isEmpty(jsonAccountList) || "-1".equals(jsonAccountList)) {
             Toast.makeText(App.mContext, "至少需要保存一个钉钉账号", Toast.LENGTH_SHORT).show();
@@ -612,7 +622,7 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    doShellCmdInputTap(536, 1000);
+                    doShellCmdInputTap(mPositionEntity.getPoint3().x, mPositionEntity.getPoint3().y);
                 }
             }, 3000);
             mHandler.removeCallbacks(mRunnableBack);
@@ -635,7 +645,7 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    doShellCmdInputTap(536, 800);
+                    doShellCmdInputTap(mPositionEntity.getPoint2().x, mPositionEntity.getPoint2().y);
                 }
             }, 3000);
             mHandler.removeCallbacks(mRunnableBack);
@@ -654,7 +664,7 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
 
     private void backHomePager() {
 //        inputClick(CHECK_IN_PAGER_BACK);
-        doShellCmdInputTap(90, 150);
+        doShellCmdInputTap(mPositionEntity.getPoint4().x, mPositionEntity.getPoint4().y);
         Log.e(TAG, "backHomePager");
         handleHomeInsensitiveCallback(tag_callback_time);
     }
@@ -694,7 +704,7 @@ public class DingDingHelperAccessibilityService extends AccessibilityService {
         }
         Rect mRect = new Rect();
         subInfo.getBoundsInScreen(mRect);*/
-        doShellCmdInputTap(156, 1055);
+        doShellCmdInputTap(mPositionEntity.getPoint1().x, mPositionEntity.getPoint1().y);
 //        Log.e(TAG, "click:" + mRect.toString());
 
     }

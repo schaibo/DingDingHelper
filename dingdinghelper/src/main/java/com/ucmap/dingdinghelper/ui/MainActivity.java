@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
@@ -495,6 +496,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0x88 && resultCode == RESULT_OK) {
             initAccount();
+        } else if (requestCode == 0x87 && resultCode == RESULT_OK) {
+            String p = SPUtils.getString("position_entity", "");
+            if (!TextUtils.isEmpty(p)) {
+                mPositionEntity = JsonUtils.parserJson(p, PositionEntity.class);
+                mSaveClickPosition.setText("修改点击坐标");
+            }
         }
     }
 
