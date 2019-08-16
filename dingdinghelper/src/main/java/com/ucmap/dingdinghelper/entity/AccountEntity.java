@@ -32,7 +32,7 @@ public class AccountEntity {
         this.nTime = nTime;
     }
 
-    private String nTime = "18:45";
+    private String nTime = "19:45";
 
     public String getTime() {
         return time;

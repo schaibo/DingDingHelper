@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">钉钉打卡神器</string>
+    <string name="app_name">钉钉打卡</string>
     <string name="description">自动签到</string>
     <string name="label">钉钉版自动签到版本</string>
     <string name="title_activity_login">DingHelper</string>
